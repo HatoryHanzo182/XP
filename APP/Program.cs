@@ -6,7 +6,7 @@ namespace APP
     {
         static void Main(string[] args)
         {
-            
+
         }
     }
 }   
