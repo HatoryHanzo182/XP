@@ -24,9 +24,7 @@ namespace APP
         public static RomanNumber Parse(string roman)
         {
             if (String.IsNullOrEmpty(roman))
-            {
-
-            }
+                throw new ArgumentException("Empty or null number");
 
             int result = 0;
             int prev = 0;
