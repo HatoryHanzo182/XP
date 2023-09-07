@@ -33,6 +33,7 @@ namespace App
             int result = 0;
             int prev = 0;
             int first_digit_index = input.StartsWith("-") ? 1 : 0;
+            List<char> invalid_сhars = new List<char>();
 
             for (int i = input.Length - 1; i >= first_digit_index; i--)
             {
@@ -50,9 +51,19 @@ namespace App
                     _ => throw new ArgumentException($"'{input}' Pars error Invalid digit: '{input[i]}'")
                 };
 
+                if (current == 0)
+                    invalid_сhars.Add(input[i]);
+
                 result += (current < prev) ? -current : current;
                 prev = current;
             }
+
+            if (invalid_сhars.Count > 0)
+            {
+                string invalid_сhars_str = new string(invalid_сhars.ToArray());
+                throw new ArgumentException($"Invalid Roman numeral character(s): {invalid_сhars_str}");
+            }
+
             return new RomanNumber() { Value = result * (1 - (first_digit_index << 1)) };
         }
     }
