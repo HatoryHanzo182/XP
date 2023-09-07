@@ -22,4 +22,4 @@ The project also includes a set of unit tests developed using a unit testing fra
 
 ## Teacher
 
-This project was written under the direction of [...](https://github.com/denniksam)denniksam computer academy step
+This project was written under the direction of [denniksam](https://github.com/denniksam)denniksam computer academy step
