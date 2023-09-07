@@ -25,12 +25,18 @@ namespace App
             if (String.IsNullOrEmpty(input))
                 throw new ArgumentException("Empty or NULL input");
 
+            input = input?.Trim()!;
+
+            if (input == String.Empty)
+                throw new ArgumentException("Empty input");
+
             int result = 0;
             int prev = 0;
             int first_digit_index = input.StartsWith("-") ? 1 : 0;
 
             for (int i = input.Length - 1; i >= first_digit_index; i--)
             {
+
                 int current = input[i] switch
                 {
                     'I' => 1,
@@ -41,7 +47,7 @@ namespace App
                     'D' => 500,
                     'M' => 1000,
                     'N' => 0,
-                    _ => throw new ArgumentException(" 'A'B' ")
+                    _ => throw new ArgumentException($"'{input}' Pars error Invalid digit: '{input[i]}'")
                 };
 
                 result += (current < prev) ? -current : current;
