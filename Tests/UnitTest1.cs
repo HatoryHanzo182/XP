@@ -1,13 +1,14 @@
 using App;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests
 {
     [TestClass]
-    public class UnitTest1
+    public class RomanNumberUnitTest
     {
         [TestMethod]
-        public void TestRomanNumberParse()
+        public void TestParse()
         {
             Dictionary<String, int> test_cases = new()
             {
@@ -83,7 +84,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void TestRomanNumberParseException()
+        public void TestException()
         {
             Assert.ThrowsException<ArgumentException>(() => RomanNumber.Parse(null!), "RomanNumber.Parse(null!) -> Exeption");
 
@@ -114,9 +115,9 @@ namespace Tests
         }
 
         [TestMethod]
-        public void TestRomanNumberParseInvalid()
+        public void TestParseInvalid()
         {
-            Dictionary<String, char> test_cases = new()
+            Dictionary<String, char> test_cases = new Dictionary<string, char>()
             {
                 { "X C", ' ' },
                 { "X\tC", '\t' },
@@ -127,7 +128,7 @@ namespace Tests
                 Assert.IsTrue(Assert.ThrowsException<ArgumentException>(() => RomanNumber.Parse(pair.Key), $"RomanNumber.Parse({pair.Key}) -> Exeption").Message
                     .Contains($"'{pair.Value}'"), $"ex.Message contains '{pair.Value}'");
 
-            Dictionary<String, char[]> test_cases2 = new()
+            Dictionary<String, char[]> test_cases2 = new Dictionary<string, char[]>()
             {
                 {"12XC", new[] { '1', '2' } },
                 {"XC12", new[] { '1', '2' } },
@@ -145,7 +146,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void TestRomanNumberParseDubious()
+        public void TestParseDubious()
         {
             String[] dubious = { " XC", "XC ", "XC\n", "\tXC", " XC " };
 
@@ -160,6 +161,29 @@ namespace Tests
             String[] dubious2 = { "IIX", "VVX" };
             foreach (var str in dubious2)
                 Assert.IsNotNull(RomanNumber.Parse(str), $"Dubious '{str}' caues NULL");
+        }
+
+        [TestMethod]
+        public void TestToString()
+        {
+            Dictionary<int, string> test_cases = new Dictionary<int, string>()
+            {
+                { 0, "N"},
+                { 1, "I"},
+                { 2, "II"},
+                { 4, "IV"},
+                { 9, "IX"},
+                { 19, "XIX"},
+                { 99, "XCIX"},
+                { 499, "CDXCIX"},
+                { 999, "CMXCIX"},
+                { -45, "-XLV" },
+                {-95,  "-XCV" },
+                {-285, "-CCLXXXV" }
+            };
+
+            foreach (var item in test_cases)
+                Assert.AreEqual(item.Value, new RomanNumber(item.Key).ToString(), $"{item.Key}.ToString() ---> '{item.Value}'");
         }
     }
 }

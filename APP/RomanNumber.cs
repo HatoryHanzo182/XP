@@ -20,6 +20,11 @@ namespace App
             { 'M', 1000 }
         };
 
+        public RomanNumber(int value = 0) 
+        {
+            Value = value;
+        }
+
         public static RomanNumber Parse(String input)
         {
             if (String.IsNullOrEmpty(input))
@@ -65,6 +70,43 @@ namespace App
             }
 
             return new RomanNumber() { Value = result * (1 - (first_digit_index << 1)) };
+        }
+
+        public override string ToString() 
+        {
+            if (Value == 0)
+                return "N";
+
+            Dictionary<int, string> ranges = new Dictionary<int, string>() 
+            {
+                { 1000, "M" },
+                { 900, "CM" },
+                { 500, "D" },
+                { 400, "CD" },
+                { 100, "C" },
+                { 90, "XC" },
+                { 50, "L" },
+                { 40, "XL" },
+                { 10, "X" },
+                { 9, "IX" },
+                { 5, "V" },
+                { 4, "IV" },
+                { 1, "I" },
+            };
+
+            StringBuilder result = new StringBuilder();
+            int value = Math.Abs(Value);
+
+            foreach (var range in ranges)
+            {
+                while (value >= range.Key)
+                {
+                    result.Append(range.Value);
+                    value -= range.Key;
+                }
+            }
+
+            return Value < 0 ? $"-{result}" : result.ToString();
         }
     }
 }
