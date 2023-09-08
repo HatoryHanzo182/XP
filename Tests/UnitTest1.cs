@@ -142,7 +142,7 @@ namespace Tests
 
                 foreach (var c in pair.Value)
                     Assert.IsTrue(ex.Message.Contains($"{c}"), $"Roman number parse ({pair.Key}): ex.Message contains {c}");
-            } 
+            }
         }
 
         [TestMethod]
@@ -184,6 +184,15 @@ namespace Tests
 
             foreach (var item in test_cases)
                 Assert.AreEqual(item.Value, new RomanNumber(item.Key).ToString(), $"{item.Key}.ToString() ---> '{item.Value}'");
+        }
+
+        [TestMethod]
+        public void CrossTestParseToString()
+        {
+            int rnd = 1;
+            RomanNumber r = new RomanNumber(rnd);
+
+
         }
     }
 }
