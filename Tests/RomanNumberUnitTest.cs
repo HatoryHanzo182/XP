@@ -1,6 +1,4 @@
 using App;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests
 {
