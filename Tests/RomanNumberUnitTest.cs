@@ -158,7 +158,7 @@ namespace Tests
 
             String[] dubious2 = { "IIX", "VVX" };
             foreach (var str in dubious2)
-                Assert.IsNotNull(RomanNumber.Parse(str), $"Dubious '{str}' caues NULL");
+                Assert.ThrowsException<ArgumentException>(() => RomanNumber.Parse(str), $"Dubious '{str}' cause NULL");
         }
 
         [TestMethod]

@@ -27,49 +27,57 @@ namespace App
 
         public static RomanNumber Parse(String input)
         {
+            input = input?.Trim()!;
+
             if (String.IsNullOrEmpty(input))
                 throw new ArgumentException("Empty or NULL input");
 
-            input = input?.Trim()!;
-
-            if (input == String.Empty)
-                throw new ArgumentException("Empty input");
-
             int result = 0;
-            int prev = 0;
-            int first_digit_index = input.StartsWith("-") ? 1 : 0;
-            List<char> invalid_сhars = new List<char>();
+            int prev = 0;  
+            int firstDigitIndex = input.StartsWith("-") ? 1 : 0;
+            List<char> invalidChars = new();
+            int maxDigit = 0;
+            bool flag = false;
 
-            for (int i = input.Length - 1; i >= first_digit_index; i--)
+            for (int i = input.Length - 1; i >= firstDigitIndex; i--)
             {
+                int current = maxDigit;
 
-                int current = input[i] switch
+                try
                 {
-                    'I' => 1,
-                    'V' => 5,
-                    'X' => 10,
-                    'L' => 50,
-                    'C' => 100,
-                    'D' => 500,
-                    'M' => 1000,
-                    'N' => 0,
-                    _ => throw new ArgumentException($"'{input}' Pars error Invalid digit: '{input[i]}'")
-                };
+                    current = input[i] switch
+                    {
+                        'I' => 1,
+                        'V' => 5,
+                        'X' => 10,
+                        'L' => 50,
+                        'C' => 100,
+                        'D' => 500,
+                        'M' => 1000,
+                        'N' => 0,
+                        _ => throw new ArgumentException($"'{input}' Parse error: Invalid digit '{input[i]}' ")
+                    };
+                }
+                catch { invalidChars.Add(input[i]); }
 
-                if (current == 0)
-                    invalid_сhars.Add(input[i]);
+                if (current > maxDigit)
+                    maxDigit = current;
+                if (current < maxDigit)
+                {
+                    if (flag)
+                        throw new ArgumentException("Invalid roman number structure");
+                    flag = true;
+                }
+                else
+                    flag = false;
 
                 result += (current < prev) ? -current : current;
                 prev = current;
             }
-
-            if (invalid_сhars.Count > 0)
-            {
-                string invalid_сhars_str = new string(invalid_сhars.ToArray());
-                throw new ArgumentException($"Invalid Roman numeral character(s): {invalid_сhars_str}");
-            }
-
-            return new RomanNumber() { Value = result * (1 - (first_digit_index << 1)) };
+            if (invalidChars.Count > 0)
+                throw new ArgumentException($"'{input}' Parse error: Invalid digits: '{String.Join(", ", invalidChars.Select(c => $"'{c}'"))}' ");
+            
+            return new RomanNumber() { Value = firstDigitIndex == 0 ? result : -result };
         }
 
         public override string ToString() 
