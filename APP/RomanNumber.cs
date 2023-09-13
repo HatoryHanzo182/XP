@@ -8,6 +8,9 @@ namespace App
 {
     public class RomanNumber
     {
+        private const char ZERO_DIGIT = 'N';
+        private const String MINUS_SIGN = "-";
+        private const String INVALID_DIGIT_MESSAGE = "Invalid digit";
         public int Value { get; set; }
         private static Dictionary<char, int> roman_values = new Dictionary<char, int>
         {
@@ -25,40 +28,52 @@ namespace App
             Value = value;
         }
 
-        public static RomanNumber Parse(String input)
+        private static int DigitValue(char digit)
         {
-            input = input?.Trim()!;
+            return digit switch
+            {
+                'I' => 1,
+                'V' => 5,
+                'X' => 10,
+                'L' => 50,
+                'C' => 100,
+                'D' => 500,
+                'M' => 1000,
+                ZERO_DIGIT => 0,
+                _ => throw new ArgumentException($"{INVALID_DIGIT_MESSAGE} '{digit}'")
+            };
+        }
 
+        private static void CeckValidityOrTrow(string input)
+        {
+            #region Number check.
             if (String.IsNullOrEmpty(input))
                 throw new ArgumentException("Empty or NULL input");
 
-            int result = 0;
-            int prev = 0;  
-            int firstDigitIndex = input.StartsWith("-") ? 1 : 0;
-            List<char> invalidChars = new();
+            int firstDigitIndex = input.StartsWith(MINUS_SIGN) ? 1 : 0;
+
+            List<char> invalidChars = new List<char>();
+            for (int i = input.Length - 1; i >= firstDigitIndex; i--)
+            {
+                try { DigitValue(input[i]); }
+                catch { invalidChars.Add(input[i]); }
+            }
+
+            if (invalidChars.Count > 0)
+                throw new ArgumentException($"'{input}' Parse error: Invalid digits: '{String.Join(", ", invalidChars.Select(c => $"'{c}'"))}'");
+            #endregion
+        }
+
+        private static void CheckCompositionOrTrow(string input)
+        {
+            #region Correct number composition.
             int maxDigit = 0;
             bool flag = false;
+            int firstDigitIndex = input.StartsWith(MINUS_SIGN) ? 1 : 0;
 
             for (int i = input.Length - 1; i >= firstDigitIndex; i--)
             {
-                int current = maxDigit;
-
-                try
-                {
-                    current = input[i] switch
-                    {
-                        'I' => 1,
-                        'V' => 5,
-                        'X' => 10,
-                        'L' => 50,
-                        'C' => 100,
-                        'D' => 500,
-                        'M' => 1000,
-                        'N' => 0,
-                        _ => throw new ArgumentException($"'{input}' Parse error: Invalid digit '{input[i]}' ")
-                    };
-                }
-                catch { invalidChars.Add(input[i]); }
+                int current = DigitValue(input[i]);
 
                 if (current > maxDigit)
                     maxDigit = current;
@@ -66,16 +81,33 @@ namespace App
                 {
                     if (flag)
                         throw new ArgumentException("Invalid roman number structure");
+
                     flag = true;
                 }
                 else
                     flag = false;
+            }
+            #endregion
+        }
+
+        public static RomanNumber Parse(String input)
+        {
+            input = input?.Trim()!;
+
+            CeckValidityOrTrow(input);
+            CheckCompositionOrTrow(input);
+
+            int firstDigitIndex = input.StartsWith(MINUS_SIGN) ? 1 : 0;
+            int result = 0;
+            int prev = 0;  
+
+            for (int i = input.Length - 1; i >= firstDigitIndex; i--)
+            {
+                int current = DigitValue(input[i]);
 
                 result += (current < prev) ? -current : current;
                 prev = current;
             }
-            if (invalidChars.Count > 0)
-                throw new ArgumentException($"'{input}' Parse error: Invalid digits: '{String.Join(", ", invalidChars.Select(c => $"'{c}'"))}' ");
             
             return new RomanNumber() { Value = firstDigitIndex == 0 ? result : -result };
         }
@@ -83,7 +115,7 @@ namespace App
         public override string ToString() 
         {
             if (Value == 0)
-                return "N";
+                return ZERO_DIGIT.ToString();
 
             Dictionary<int, string> ranges = new Dictionary<int, string>() 
             {
@@ -114,7 +146,7 @@ namespace App
                 }
             }
 
-            return Value < 0 ? $"-{result}" : result.ToString();
+            return Value < 0 ? $"{MINUS_SIGN}{result}" : result.ToString();
         }
     }
 }
