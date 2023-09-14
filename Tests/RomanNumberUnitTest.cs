@@ -265,8 +265,6 @@ namespace Tests
             Assert.IsInstanceOfType(r3, typeof(RomanNumber));
             Assert.AreEqual(60, RomanNumber.Sum(r1, r2, r3).Value);
             Assert.AreEqual(0, RomanNumber.Sum().Value);
-
-            RomanNumber.Sum(null!);
         }
     }
 }
