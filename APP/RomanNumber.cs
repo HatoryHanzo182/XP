@@ -9,12 +9,13 @@ namespace App
     public class RomanNumber
     {
         private const char ZERO_DIGIT = 'N';
-        private const string MINUS_SIGN = "-";
-        private const string INVALID_DIGIT_MESSAGE = "Invalid digit";
-        private const string INVALID_ROMAN_STRUCTURE_MESSAGE = "Invalid roman number structure";
-        private const string EMPTY_OR_NULL_INPUT_MESSAGE = "Empty or NULL input";
-        private const string INVALID_DIGIT_SEPARATOR = ", ";
-        private const string DIGIT_FORMAT = "'{0}'";
+        private const String MINUS_SIGN = "-";
+        private const String INVALID_DIGIT_MESSAGE = "Invalid digit";
+        private const String INVALID_ROMAN_STRUCTURE_MESSAGE = "Invalid roman number structure";
+        private const String EMPTY_OR_NULL_INPUT_MESSAGE = "Empty or NULL input";
+        private const String INVALID_DIGIT_SEPARATOR = ", ";
+        private const String DIGIT_FORMAT = "'{0}'";
+        private const String PLUS_NULL_ARGUMENT_MESSAGE = "Illegal Plus() invocation with null argument";
 
         public int Value { get; set; }
 
@@ -115,6 +116,24 @@ namespace App
             return new RomanNumber { Value = firstDigitIndex == 0 ? result : -result };
         }
 
+        public RomanNumber Plus(RomanNumber other)
+        {
+            if (other is null)
+                throw new ArgumentNullException(PLUS_NULL_ARGUMENT_MESSAGE);
+
+            return new RomanNumber(this.Value + other.Value);
+        }
+
+        public static RomanNumber Sum(params RomanNumber[] numbers) 
+        {
+            var resRoman = new RomanNumber(0);
+
+            foreach (var roman in numbers)
+                resRoman.Value += roman.Value;
+
+            return resRoman;
+        }
+
         public override string ToString()
         {
             if (Value == 0)
@@ -138,7 +157,7 @@ namespace App
             };
 
             StringBuilder result = new StringBuilder();
-            int value = Math.Abs(Value);
+            long value = Math.Abs(Value);
 
             foreach (var range in ranges)
             {
@@ -152,5 +171,4 @@ namespace App
             return Value < 0 ? $"{MINUS_SIGN}{result}" : result.ToString();
         }
     }
-
 }

@@ -216,5 +216,57 @@ namespace Tests
                 Assert.AreEqual(item, RomanNumber.Parse(roman_str).Value, $"CrossTestParseToString (Message): {item} ---> {roman_str}");
             }
         }
+
+        [TestMethod]
+        public void  TypesFeatures()
+        {
+            RomanNumber r = new RomanNumber(10);
+
+            //Assert.AreEqual(10u, r.Value);  // 10u - uint, r.Value - int.
+            Assert.AreEqual((short)10, r.Value);
+        }
+
+        [TestMethod]
+        public void TestPlus()
+        {
+            RomanNumber r1 = new RomanNumber(10);
+            RomanNumber r2 = new RomanNumber(20);
+            var r3 = r1.Plus(r2);
+
+            Assert.IsInstanceOfType(r1.Plus(r2), typeof(RomanNumber));
+            Assert.AreNotSame(r1, r3);
+            Assert.AreNotSame(r2, r3);
+            Assert.AreEqual(30, r3.Value);
+            Assert.AreEqual("XXX", r3.ToString());
+            Assert.AreEqual(15, r1.Plus(new RomanNumber(5)).Value);
+            Assert.AreEqual(1, r1.Plus(new RomanNumber(-9)).Value);
+            Assert.AreEqual(-1, r1.Plus(new RomanNumber(-11)).Value);
+            Assert.AreEqual(0, r1.Plus(new RomanNumber(-10)).Value);
+            Assert.AreEqual(10, r1.Plus(new RomanNumber()).Value);
+            Assert.AreEqual(5, RomanNumber.Parse("IV").Plus(new RomanNumber(1)).Value);
+            Assert.AreEqual(-6, RomanNumber.Parse("-V").Plus(new RomanNumber(-1)).Value);
+            Assert.AreEqual("N", new RomanNumber(20).Plus(new RomanNumber(-20)).ToString());
+            Assert.AreEqual("-II", new RomanNumber(-20).Plus(new RomanNumber(18)).ToString());
+
+            var ex = Assert.ThrowsException<ArgumentNullException>(() => r1.Plus(null!), "Plus(null!) -> ArgumentNullException");
+            String expectedFragment = "Illegal Plus() invocation with null argument";
+
+            Assert.IsTrue(ex.Message.Contains(expectedFragment, StringComparison.InvariantCultureIgnoreCase), 
+                $"Plus(null!): ex.Message ({ex.Message}) contains '{expectedFragment}'");
+        }
+
+        [TestMethod]
+        public void TestSum()
+        {
+            RomanNumber r1 = new RomanNumber(10);
+            RomanNumber r2 = new RomanNumber(20);
+            var r3 = RomanNumber.Sum(r1, r2);
+
+            Assert.IsInstanceOfType(r3, typeof(RomanNumber));
+            Assert.AreEqual(60, RomanNumber.Sum(r1, r2, r3).Value);
+            Assert.AreEqual(0, RomanNumber.Sum().Value);
+
+            RomanNumber.Sum(null!);
+        }
     }
 }
