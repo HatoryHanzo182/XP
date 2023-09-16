@@ -109,7 +109,6 @@ namespace Tests
             ex = Assert.ThrowsException<ArgumentException>(() => RomanNumber.Parse(num));
 
             Assert.IsTrue(ex.Message.Contains("Invalid digit", StringComparison.OrdinalIgnoreCase), "ex.Message Contains 'Invalid digit'");
-            //Assert.IsTrue(ex.Message.Contains($"'{num}'", StringComparison.OrdinalIgnoreCase), $"ex.Message contains \"{num}\")");
         }
 
         [TestMethod]
@@ -222,7 +221,6 @@ namespace Tests
         {
             RomanNumber r = new RomanNumber(10);
 
-            //Assert.AreEqual(10u, r.Value);  // 10u - uint, r.Value - int.
             Assert.AreEqual((short)10, r.Value);
         }
 
