@@ -28,6 +28,12 @@ The project also includes a set of unit tests developed using a unit testing fra
 
 5. **CrossTestParseToString** - Cross-tests the RomanNumber class by converting integer values to their Roman numeral representations using the RomanNumber.ToString() method, and then parsing those Roman numerals back to integers using the RomanNumber.Parse() method. This ensures consistency and accuracy of conversion between integers and Roman numerals.
 
+6. **TypesFeatures** - Checks that the RomanNumber(int) constructor correctly sets the value of the RomanNumber object to the number passed in. If your RomanNumber class is implemented correctly and this constructor works correctly, then this test will pass.
+
+7. **TestPlus** - Is designed to test various aspects of the Plus method of the RomanNumber class, including argument validation and the correctness of the addition results.
+
+7. **TestSum** - This set of test cases satisfies various aspects of the RomanNumber.Sum method, including correct addition, null handling, and random tests to ensure that the method works correctly.
+
 ## Teacher
 
 This project was written under the direction of [denniksam](https://github.com/denniksam) computer academy step
