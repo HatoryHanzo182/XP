@@ -262,9 +262,39 @@ namespace Tests
             RomanNumber r2 = new RomanNumber(20);
             var r3 = RomanNumber.Sum(r1, r2);
 
+            Assert.IsNotNull(r3);
             Assert.IsInstanceOfType(r3, typeof(RomanNumber));
             Assert.AreEqual(60, RomanNumber.Sum(r1, r2, r3).Value);
             Assert.AreEqual(0, RomanNumber.Sum().Value);
+
+            var arr1 = Array.Empty<RomanNumber>();
+            var arr2 = new RomanNumber[] { new RomanNumber(2), new RomanNumber(4), new RomanNumber(5) };
+
+            Assert.IsNull(RomanNumber.Sum(null!, null!, null!), "NULL NULL NULL");
+            Assert.AreEqual(0, RomanNumber.Sum(arr1).Value, "Empty arr -> Sum 0");
+            Assert.AreEqual(11, RomanNumber.Sum(arr2).Value, "2-4-5 arr -> Sum 11");
+
+            IEnumerable<RomanNumber> arr3 = new List<RomanNumber>() { new RomanNumber(2), new RomanNumber(4), new RomanNumber(5) };
+
+            Assert.AreEqual(11, RomanNumber.Sum(arr3.ToArray()).Value, "2-4-5 list -> Sum11");
+
+            Random rnd = new Random();
+
+            for (int i = 0; i < 200; i += 1)
+            {
+                int x = rnd.Next(-3000, 3000);
+                int y = rnd.Next(-3000, 3000);
+
+                Assert.AreEqual(x + y, RomanNumber.Sum(new(x), new(y)).Value, $"{x} + {y} - rnd test");
+            }
+
+            for (int i = 0; i < 200; i += 1)
+            {
+                RomanNumber rx = new(rnd.Next(-3000, 3000));
+                RomanNumber ry = new(rnd.Next(-3000, 3000));
+
+                Assert.AreEqual(rx.Plus(ry).Value, RomanNumber.Sum(rx, ry).Value, $"{rx} + {ry} - rnd cross");
+            }
         }
     }
 }

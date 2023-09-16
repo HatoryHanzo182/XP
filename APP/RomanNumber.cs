@@ -124,8 +124,13 @@ namespace App
             return new RomanNumber(this.Value + other.Value);
         }
 
+        private static bool IsNull(RomanNumber n) => n == null;
+
         public static RomanNumber Sum(params RomanNumber[] numbers) 
         {
+            if (numbers == null || (numbers.Length > 0 && numbers.All(IsNull)))
+                return null!;
+
             var resRoman = new RomanNumber(0);
 
             foreach (var roman in numbers)
