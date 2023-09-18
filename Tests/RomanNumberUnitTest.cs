@@ -294,5 +294,83 @@ namespace Tests
                 Assert.AreEqual(rx.Plus(ry).Value, RomanNumber.Sum(rx, ry).Value, $"{rx} + {ry} - rnd cross");
             }
         }
+
+        [TestMethod]
+        public void TestEval()
+        {
+            RomanNumber result1 = RomanNumber.Eval("X+II");
+            Assert.AreEqual("XII", result1.ToString(), "X+II must equal XII");
+
+            RomanNumber result2 = RomanNumber.Eval("V-II");
+            Assert.AreEqual("III", result2.ToString(), "V - II must be equal to III");
+
+            RomanNumber result3 = RomanNumber.Eval("V + II");
+            Assert.AreEqual("VII", result3.ToString(), "V + II must be equal to VII");
+
+            RomanNumber result4 = RomanNumber.Eval("V - X");
+            Assert.AreEqual("-V", result4.ToString(), "V - X must be equal to -V");
+
+            RomanNumber result6 = RomanNumber.Eval("-I - -X");
+            Assert.AreEqual("IX", result6.ToString(), "-I - -X must be equal to IX");
+
+            RomanNumber result7 = RomanNumber.Eval("-X--V");
+            Assert.AreEqual("-V", result7.ToString(), "-X - -V must be equal to -V");
+
+            RomanNumber result8 = RomanNumber.Eval("-V+-I");
+            Assert.AreEqual("-VI", result8.ToString(), "-V + -I must be equal to -VI");
+
+            RomanNumber result9 = RomanNumber.Eval("I+-VI");
+            Assert.AreEqual("-V", result9.ToString(), "I + -VI must be equal to -V");
+        }
+
+        [TestMethod]
+        public void CrossTestEval()
+        {
+            Dictionary<int, string> test_cases = new Dictionary<int, string>()
+            {
+                { 0, "N" },
+                { 1, "I" },
+                { 2, "II" },
+                { 3, "III" },
+                { 4, "IV" },
+                { 5, "V" },
+                { 6, "VI" },
+                { 7, "VII" },
+                { 8, "VIII" },
+                { 9, "IX" },
+                { 10, "X" },
+                { 11, "XI" },
+                { 12, "XII" },
+                { 13, "XIII" },
+                { 19, "XIX" },
+                { 20, "XX" },
+                { 21, "XXI" },
+                { 49, "XLIX" },
+                { 50, "L" },
+                { 100, "C" },
+                { 399, "CCCXCIX" },
+                { 400, "CD" },
+                { 499, "CDXCIX" },
+                { 500, "D" },
+                { 900, "CM" },
+                { 999, "CMXCIX" },
+                { 1000, "M" },
+                { 3999, "MMMCMXCIX" },
+                { -45, "-XLV" },
+                { -95, "-XCV" },
+                { -285, "-CCLXXXV" }
+            };
+
+            foreach (var testCase in test_cases)
+            {
+                int expectedValue = testCase.Key;
+                string input = testCase.Value;
+
+                RomanNumber result = RomanNumber.Eval(input + input);
+
+                Assert.AreEqual(expectedValue, result.Value, $"Input: {input}");
+            }
+        }
+
     }
 }

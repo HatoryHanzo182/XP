@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace App
@@ -124,6 +125,18 @@ namespace App
             return new RomanNumber(this.Value + other.Value);
         }
 
+        public RomanNumber Minus(RomanNumber other)
+        {
+            if (other is null)
+                throw new ArgumentNullException("Illegal Minus() invocation with null argument");
+
+            int result = this.Value - other.Value;
+
+            return new RomanNumber(result);
+        }
+
+
+
         private static bool IsNull(RomanNumber n) => n == null;
 
         public static RomanNumber Sum(params RomanNumber[] numbers) 
@@ -175,5 +188,47 @@ namespace App
 
             return Value < 0 ? $"{MINUS_SIGN}{result}" : result.ToString();
         }
+
+        public static RomanNumber Eval(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                throw new ArgumentException("Input cannot be empty");
+
+            input = input.Trim();
+
+            string[] parts = input.Split(new char[] { '+', '-' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (parts.Length != 2)
+                throw new ArgumentException("Invalid input");
+
+            string operand1 = parts[0].Trim();
+            char operatorChar = input.FirstOrDefault(c => c == '+' || c == '-');
+            string operand2 = parts[1].Trim();
+
+            bool isOperand1Negative = operand1.StartsWith("-");
+            bool isOperand2Negative = operand2.StartsWith("-");
+
+            operand1 = isOperand1Negative ? operand1.Substring(1) : operand1;
+            operand2 = isOperand2Negative ? operand2.Substring(1) : operand2;
+
+            if (string.IsNullOrEmpty(operand1) || string.IsNullOrEmpty(operand2) || operatorChar == '\0')
+                throw new ArgumentException("Invalid input");
+
+            RomanNumber romanOperand1 = RomanNumber.Parse(operand1);
+            RomanNumber romanOperand2 = RomanNumber.Parse(operand2);
+
+            if (isOperand1Negative)
+                romanOperand1 = romanOperand1.Minus(romanOperand1).Negate();
+            if (isOperand2Negative)
+                romanOperand2 = romanOperand2.Minus(romanOperand2).Negate();
+            if (operatorChar == '+')
+                return romanOperand1.Plus(romanOperand2);
+            else if (operatorChar == '-')
+                return romanOperand1.Minus(romanOperand2);
+            else
+                throw new ArgumentException($"Invalid operator. Only + and - are allowed. Expression: {input}");
+        }
+
+        public RomanNumber Negate() { return new RomanNumber(-Value); }
     }
 }
