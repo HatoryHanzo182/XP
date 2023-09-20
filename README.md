@@ -1,4 +1,4 @@
-# XP Project
+# Basic course on the methodology of extreme programming
 
 This project was created for educational purposes, with the aim of learning the XP (Extreme Programming) methodology and developing C# programming skills.
 
